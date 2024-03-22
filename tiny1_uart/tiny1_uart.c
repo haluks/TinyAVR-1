@@ -30,11 +30,13 @@ ISR (USART0_RXC_vect){
 		uaflag++;
 	}
 }
-ISR (USART0_DRE_vect){	//uart veri gˆnderim kesmesi
+ISR (USART0_DRE_vect){	//uart veri g√∂nderim kesmesi
 	tx_son=(tx_son+1)&UART_Tx_Mask;
+	if (tx_son==tx_bas){
+	UART_Bos_Off;	
+	}else{
 	USART0.TXDATAL=tx_ring[tx_son];
-	if (tx_son==tx_bas)
-	UART_Bos_Off;
+	}
 }
 ISR(USART0_TXC_vect){
 	
@@ -47,7 +49,7 @@ void uart_basla(Bd_rate_t _baud){
 	uint16_t baudRate=0;
 	baudRate=(float)(F_CPU*4/_baud);
 	USART0.CTRLB|=USART_RXMODE_NORMAL_gc;
-	if (_baud>=115200){//115200 ve ¸st¸nde U2X 1 yap˝l˝yor.
+	if (_baud>=115200){//115200 ve √ºst√ºnde U2X 1 yap√Ωl√Ωyor.
 		baudRate=(float)(F_CPU*8/_baud);
 		USART0.CTRLB|=USART_RXMODE_CLK2X_gc;
 	}
