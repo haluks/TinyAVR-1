@@ -31,15 +31,13 @@ ISR (USART0_RXC_vect){
 	}
 }
 ISR (USART0_DRE_vect){	//uart veri gönderim kesmesi
-	tx_son=(tx_son+1)&UART_Tx_Mask;
-	if (tx_son==tx_bas){
+	tx_son=(tx_son+1)&UART_Tx_Mask;	
+	if (tx_son==tx_bas)
 	UART_Bos_Off;	
-	}else{
-	USART0.TXDATAL=tx_ring[tx_son];
-	}
+	USART0.TXDATAL=tx_ring[tx_son];	
 }
 ISR(USART0_TXC_vect){
-	
+	USART0.STATUS|=USART_TXCIF_bm;
 }
 void uart_basla(Bd_rate_t _baud){
 	cli();	
