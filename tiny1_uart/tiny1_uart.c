@@ -44,7 +44,7 @@ void uart_basla(Bd_rate_t _baud){
 	PORTB_DIRSET|=(1<<UART_TX_PIN);
 	PORTB_OUTSET|=(1<<UART_TX_PIN);
 	PORTB_DIRSET&=~(0<<UART_RX_PIN);
-	uint16_t baudRate=0.0;
+	uint16_t baudRate=0;
 	baudRate=((float)(F_CPU<<2)/_baud);
 	USART0_CTRLB|=USART_RXMODE_NORMAL_gc;
 	if (_baud>=115200){//115200 ve üstünde U2X 1 yapılıyor.
