@@ -40,20 +40,21 @@ ISR(USART0_TXC_vect){
 	USART0.STATUS|=USART_TXCIF_bm;
 }
 void uart_basla(Bd_rate_t _baud){
-	cli();	
+	cli();
 	PORTB_DIRSET|=(1<<UART_TX_PIN);
 	PORTB_OUTSET|=(1<<UART_TX_PIN);
 	PORTB_DIRSET&=~(0<<UART_RX_PIN);
-	uint16_t baudRate=0;
-	baudRate=((float)(F_CPU<<2)/_baud);
-	USART0_CTRLB|=USART_RXMODE_NORMAL_gc;
-	if (_baud>=115200){//115200 ve üstünde U2X 1 yapılıyor.
-		baudRate=((float)(F_CPU<<3)/_baud);
+	float baudRate=0;
+	if (_baud>19200){//19200 ve üstünde 2X yapılıyor.
+		baudRate=(float)(F_CPU<<3)/_baud+0.5;
 		USART0_CTRLB|=USART_RXMODE_CLK2X_gc;
+		}else{
+		baudRate=(float)(F_CPU<<2)/_baud+0.5;
+		USART0_CTRLB|=USART_RXMODE_NORMAL_gc;
 	}
-	USART0.BAUD=baudRate;	
-	USART0_CTRLA|=(1<<USART_RXCIE_bp)|(1<<USART_TXCIE_bp);
-	USART0_CTRLB|=(1<<USART_RXEN_bp)|(1<<USART_TXEN_bp);
+	USART0.BAUD=baudRate;
+	USART0_CTRLA|=(1<<USART_RXCIE_bp)/*|(1<<USART_TXCIE_bp)*/;
+	USART0_CTRLB|=	(1<<USART_RXEN_bp)|(1<<USART_TXEN_bp);
 	USART0_CTRLC|=USART_CHSIZE_8BIT_gc;
 	sei();
 }
