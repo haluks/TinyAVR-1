@@ -41,9 +41,9 @@ ISR(USART0_TXC_vect){
 }
 void uart_basla(Bd_rate_t _baud){
 	cli();
-	PORTB_DIRSET|=(1<<UART_TX_PIN);
-	PORTB_OUTSET|=(1<<UART_TX_PIN);
-	PORTB_DIRSET&=~(0<<UART_RX_PIN);
+	PORTB_DIR|=(1<<UART_TX_PIN);
+	PORTB_OUT|=(1<<UART_TX_PIN);
+	PORTB_DIR&=~(0<<UART_RX_PIN);
 	float baudRate=0;
 	if (_baud>19200){//19200 ve üstünde 2X yapılıyor.
 		baudRate=(float)(F_CPU<<3)/_baud+0.5;
