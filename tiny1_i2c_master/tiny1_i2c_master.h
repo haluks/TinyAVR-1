@@ -12,8 +12,8 @@
 #define TINY1_I2C_MASTER_H
 
 #define F_CPU 3333333
-#define F_SCL 100000
-#define TWI_MBAUD(F_SCL,Trise) ((F_CPU/F_SCL)/2)-(5+(((F_CPU/1000000)*Trise)/2000))
+#define F_SCL 100000// I2C frekans
+#define Trise 200
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
@@ -25,19 +25,19 @@
 //I2C status
 #define I2C_STATUS						TWI0.MSTATUS
 //I2C master status
-#define I2C_MTR_ADR_ACK					0x40// adres yazýldý ack geldi
-#define I2C_MTR_ADR_NACK				0x50// adres yazýldý nack geldi
+#define I2C_MTR_ADR_ACK					0x40// adres yazÃ½ldÃ½ ack geldi
+#define I2C_MTR_ADR_NACK				0x50// adres yazÃ½ldÃ½ nack geldi
 #define I2C_MTR_DATA_ACK				0x42// veri gitti ack geldi
 #define I2C_MTR_DATA_NACK				0x52// veri gitti nack geldi
-#define I2C_MRD_ADR_ACK					0x81//adres yazýldý ack geldi
-#define I2C_MRD_ADR_NACK				0x91// adres yazýldý nack geldi
-#define I2C_MRD_DATA_ACK				0x83// veri alýndý ack gönderildi
-#define I2C_MRD_DATA_NACK				0x93//veri alýndý nac gönderildi
+#define I2C_MRD_ADR_ACK					0x81//adres yazÃ½ldÃ½ ack geldi
+#define I2C_MRD_ADR_NACK				0x91// adres yazÃ½ldÃ½ nack geldi
+#define I2C_MRD_DATA_ACK				0x83// veri alÃ½ndÃ½ ack gÃ¶nderildi
+#define I2C_MRD_DATA_NACK				0x93//veri alÃ½ndÃ½ nac gÃ¶nderildi
 
 //I2C error status
-#define I2C_ARB_LOST					TWI_ARBLOST_bm//hat yönetim kaybý
+#define I2C_ARB_LOST					TWI_ARBLOST_bm//hat yÃ¶netim kaybÃ½
 #define I2C_UNKNOWN						TWI_BUSSTATE_UNKNOWN_gc//belirsiz durum
-#define I2C_BUS_ERR						TWI_BUSERR_bm//hat hatasý
+#define I2C_BUS_ERR						TWI_BUSERR_bm//hat hatasÃ½
 
 //////////////////////////////////////////////////////////////////////////
 
