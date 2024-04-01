@@ -18,11 +18,11 @@ static volatile uint8_t Sladr_RW=0, i2c_rep=0;
 static volatile uint8_t i2c_state=0;
 volatile uint32_t timeout=0;
 volatile uint8_t adres_nack=0;
-void i2c_init(){	
+void i2c_init(){
 	cli();
-	TWI0.MBAUD=TWI_MBAUD(F_SCL,200);	
-	TWI0.MCTRLA|=TWI_ENABLE_bm/*|(1<<TWI_SMEN_bp)|(TWI_TIMEOUT_200US_gc)|(1<<TWI_QCEN_bp)*/|TWI_WIEN_bm|TWI_RIEN_bm;
-	I2C_STATUS|= TWI_RIF_bm | TWI_WIF_bm|TWI_BUSSTATE_IDLE_gc;
+	TWI0.MBAUD=(((float)F_CPU/F_SCL)/2)-(5+((((float)F_CPU*Trise)/1000)/1000)/2000);
+	TWI0.MCTRLA|=(TWI_ENABLE_bm)/*|(1<<TWI_SMEN_bp)|(TWI_TIMEOUT_200US_gc)|(1<<TWI_QCEN_bp)*/|(TWI_WIEN_bm)|(TWI_RIEN_bm);
+	I2C_STATUS|= (TWI_RIF_bm) | (TWI_WIF_bm)|(TWI_BUSSTATE_IDLE_gc);
 	sei();
 }
 void i2c_disable(){
@@ -121,9 +121,9 @@ uint8_t i2c_adres_scan(){
 ISR (TWI0_TWIM_vect){
 	i2c_state|=(I2C_STATUS&0xD0);
 	switch (i2c_state){
-		case I2C_MTR_ADR_ACK://adres yazýldý ack geldi
+		case I2C_MTR_ADR_ACK://adres yazÃ½ldÃ½ ack geldi
 			i2c_state= STAT_WRT_DATA;
-		case I2C_MTR_DATA_ACK://data yazýldý ack geldi
+		case I2C_MTR_DATA_ACK://data yazÃ½ldÃ½ ack geldi
 			if (i2c_tx_son!=i2c_tx_bas){
 				TWI0.MDATA=i2c_tx_ring[i2c_tx_son++];
 			}
@@ -135,16 +135,16 @@ ISR (TWI0_TWIM_vect){
 				i2c_stop();
 			}		
 		break;
-		case I2C_MTR_ADR_NACK://adres yazýldý nack geldi
+		case I2C_MTR_ADR_NACK://adres yazÃ½ldÃ½ nack geldi
 		adres_nack=0;
 		i2c_stop();
 		break;
-		case I2C_MTR_DATA_NACK:	//data yazýldý nack geldi
+		case I2C_MTR_DATA_NACK:	//data yazÃ½ldÃ½ nack geldi
 		i2c_stop();
 		break;	
-		case I2C_MRD_DATA_ACK://okuma data yazýldý ack geldi	
+		case I2C_MRD_DATA_ACK://okuma data yazÃ½ldÃ½ ack geldi	
 					
-		case I2C_MRD_ADR_ACK://okuma adres yazýldý ack geldi
+		case I2C_MRD_ADR_ACK://okuma adres yazÃ½ldÃ½ ack geldi
 		i2c_state=STAT_RD_DATA;	
 		
 		i2c_rx_ring[i2c_rx_bas++]=TWI0.MDATA;
@@ -158,7 +158,7 @@ ISR (TWI0_TWIM_vect){
 				i2c_stop();
 			}
 		break;
-		case I2C_MRD_ADR_NACK://okuma adres yazýldý ack geldi
+		case I2C_MRD_ADR_NACK://okuma adres yazÃ½ldÃ½ ack geldi
 			i2c_stop();
 		break;	
 		case I2C_MRD_DATA_NACK:		
